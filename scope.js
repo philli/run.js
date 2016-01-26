@@ -1,22 +1,18 @@
 /**
- * 【run.scope】代码组织
- * @dependancy jQuery / Zepto
+ * @file 【run.scope】代码组织
+ * @dependancy jQuery / Zepto / RUN
  * @author Phil Li <zixulee@163.com>
  * @date 2014.3.12
  */
+
 (function(window){
     
-    var RUN, $ = window.$ || RUN;
+    var RUN, $ = window.$ || (RUN = window.RUN);
     
     if(!$) return;
     
-    RUN = window.RUN || function(selector, context){
-        var fn = arguments.callee, init;
-        return this instanceof fn ? new fn.Scope(selector) : (init = fn.prototype._init) && new init(selector, context);
-    };
-    
     // 代码组织
-    RUN.Scope = function(object){
+    var Scope = function(object){
         var self = arguments.callee, pt = self.prototype;
         self.events = {};
         if(!(this instanceof self)) return new self(object);
@@ -91,6 +87,9 @@
         return F;
     };
 
-    typeof module !== 'undefined' ? (module.exports = RUN.Scope) : (window.RUN = RUN);
+    typeof module !== 'undefined' ? (module.exports = Scope) : (window.RUN = RUN || function(selector, context){
+        var fn = arguments.callee, init;
+        return this instanceof fn && fn.Scope ? new fn.Scope(selector) : (init = fn.prototype._init) && new init(selector, context);
+    }) && (RUN.Scope = Scope);
     
 })(window);
