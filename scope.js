@@ -1,5 +1,6 @@
 /**
  * @file 【run.scope】代码组织
+ * @type framework
  * @dependancy jQuery / Zepto / RUN
  * @author Phil Li <zixulee@163.com>
  * @date 2014.3.12
@@ -7,7 +8,7 @@
 
 (function(window){
     
-    var RUN, $ = window.$ || (RUN = window.RUN);
+    var $ = window.$ || window.RUN;
     
     if(!$) return;
     
@@ -87,9 +88,9 @@
         return F;
     };
 
-    typeof module !== 'undefined' ? (module.exports = Scope) : (window.RUN = RUN || function(selector, context){
+    typeof module !== 'undefined' ? (module.exports = Scope) : (window.RUN || (window.RUN = function(selector, context){
         var fn = arguments.callee, init;
         return this instanceof fn && fn.Scope ? new fn.Scope(selector) : (init = fn.prototype._init) && new init(selector, context);
-    }) && (RUN.Scope = Scope);
+    })) && (RUN.Scope = Scope);
     
 })(window);
