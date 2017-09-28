@@ -1,5 +1,5 @@
 /**
- * run.js
+ * 【run.js】 v1.0.0
  * @author philli <zixulee@163.com>
  */
 
@@ -268,7 +268,7 @@
     });
 
     RUN.Scope = function (object) {
-        var self = Scope;
+        var self = RUN.Scope;
         var pt = self.prototype;
         self.events = {};
         if (!(this instanceof self)) return new self(object);
@@ -360,7 +360,7 @@
             }
         }
         return inst;
-    }
+    };
 
     // 路由
     (function () {
