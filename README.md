@@ -3,35 +3,35 @@
 ## 获取节点集合
 ### RUN(selector)
 返回节点数组，如：  
-var elArr = RUN('#id');  
-var aArr = RUN('#id a');  
+>var elArr = RUN('#id');  
+>var aArr = RUN('#id a');  
   
 ## 加载完成  
 ### RUN(callback)  
-RUN(function () {  
-  RUN.scope('list', function () {  
-    // TODO  
-  });  
-});  
+>RUN(function () {  
+>>RUN.scope('list', function () {  
+>>>// TODO  
+>>});  
+>});  
   
 ## 代码组织  
 ### RUN.Scope(params)  
-var App = RUN.Scope({  
-  el: '#id',  
-    init: function () {  
-    // 初始化  
-  },  
-  events: {  
-    'click #wrap a': 'clickWrapA',  
-    'click .name': 'editName'  
-  },  
-  clickWrapA: function (e) {  
-  
-  },  
-  editName: function (e) {  
-  
-  }  
-});  
+>var App = RUN.Scope({  
+>>el: '#id',  
+>>init: function () {  
+>>>// 初始化  
+>>},  
+>>events: {  
+>>>'click #wrap a': 'clickWrapA',  
+>>>'click .name': 'editName'  
+>>},  
+>>clickWrapA: function (e) {  
+>>>
+>>},  
+>>editName: function (e) {  
+>>>
+>>}  
+>});  
 // 加载完成
 RUN(function () {  
   // 实例化  
