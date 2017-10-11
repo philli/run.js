@@ -35,13 +35,13 @@ var App = RUN.Scope({
     
   }  
 });  
-~~~
+  
 // 加载完成
-~~~ javascript
 RUN(function () {  
   // 实例化  
   new App();  
 });  
+
 ~~~ javascript
   
 ### RUN.scope
