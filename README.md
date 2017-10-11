@@ -18,7 +18,7 @@ RUN(function () {
 ### RUN.Scope(params)  
 var App = RUN.Scope({  
   el: '#id',  
-  init: function () {  
+    init: function () {  
     // 初始化  
   },  
   events: {  
