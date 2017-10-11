@@ -41,8 +41,8 @@ RUN(function () {
   // 实例化  
   new App();  
 });  
-
-~~~ javascript
+  
+~~~
   
 ### RUN.scope
 在RUN.Scope基础上进行了封装，直接实例化  
