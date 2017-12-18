@@ -374,10 +374,12 @@
             // @param route.routes {object} 路由参数
             // @param route.before {function} 前置任务
             // @param route.after {function} 后置任务
+            // @param route.xxx {function} 挂载于route下的路由处理器, 其名称对应route.routes中指定的函数名称(如示例中的'list')
             // 如：{
-            //      routes: {'/': function(){}, 'default': function(){}},
+            //      routes: {'/': 'list', 'list': 'list', 'default': function(){}},
             //      before: function(){},
             //      after: function(){}
+            //      list: function(){}
             // }
             // @param handler {function|object} 非必传 当route类型为string时，handler作为路由任务
             // @param notRun {boolean} 非必传 是否不初始化运行
@@ -385,66 +387,56 @@
             if (route) {
                 if (_isObject(route)) {
                     notRun = handler;
-                    _extend(router.routes, route.routes || null);
-                    router.before = route.before;
-                    router.after = route.after;
+                    _extend(router, route || null);
                 } else if (_isString(route) && (_isFunction(handler) || _isPlainObject(handler))) {
                     router.routes[route] = handler;
                 }
                 // 绑定
                 if (!hasBind) {
-                    window.addEventListener('hashchange', runRoute, false);
+                    window.addEventListener('hashchange', loadRoute, false);
                 }
                 // 初始化触发
-                !notRun && runRoute();
+                !notRun && loadRoute();
             }
         };
-        // 执行路由
-        function runRoute() {
+        // 加载路由
+        function loadRoute() {
             var hash = _getHash();
             var routes = router.routes;
-            var r;
-
+            var before = _isFunction(router.before) && router.before;
+            var after = _isFunction(router.after) && router.after;
+            var hasRoute;
             // 路由
             for (var route in routes) {
                 // 匹配
-                var routeStr = '/^' + route.replace(/^\/|\/$/, '').replace(/\//, '\\\/') + '$/';
+                var routeStr = '/^' + route.replace(/^\/|\/$/g, '').replace(/\//g, '\\\/') + '$/';
                 var routeReg = eval(routeStr.replace(/:[\w-]+/g, '[\\\w-]+'));
-                var hasRoute;
-                if (hash === route.replace(/^\/|\/$/, '') || (routeReg && routeReg.test(hash))) {
-                    // 有路由处理器 -> 执行并跳出
-                    if (_isFunction(r = routes[route]) || _isPlainObject(r)) {
+                if (hash === route.replace(/^\/|\/$/g, '') || (routeReg && routeReg.test(hash))) {
+                    if (runRoute(routes[route], hash)) {
                         hasRoute = 1;
-                        // 前置任务
-                        _isFunction(router.before) && router.before(hash);
-                        // 路由任务
-                        runTask(r, hash);
-                        // 后置任务
-                        _isFunction(router.after) && router.after(hash);
-                        break;
                     }
-                    // 无路由处理器 -> 跳出继续走未匹配(默认路由)
-                    else {
-                        break;
-                    }
+                    break;
                 }
             }
-
             // 未匹配->检测默认
             if (!hasRoute) {
-                var def = routes['default'];
-                if (_isFunction(def)) {
-                    // 前置任务
-                    _isFunction(router.before) && router.before(hash);
-                    // 路由任务
-                    runTask(def, hash);
-                    // 后置任务
-                    _isFunction(router.after) && router.after(hash);
-                }
+                runRoute(routes['default'], hash);
             }
-
-            function runTask(r, hash) {
-                _isFunction(r) ? r(hash) : _isPlainObject(r) && RUN.scope(hash, r);
+            // 执行路由
+            function runRoute (r, hash) {
+                var isStr = 'string' === typeof r;
+                var isFunc = _isFunction(r);
+                var isObj = _isPlainObject(r);
+                if (isStr || isFunc || isObj) {
+                    // 前置任务
+                    before && before(hash);
+                    // 路由任务
+                    isStr ? _isFunction(router[r]) && router[r](hash) : isFunc ? r(hash) : isObj && RUN.scope(hash, r);
+                    // 后置任务
+                    after && after(hash);
+                    // 路由正常
+                    return 1;
+                }
             }
         }
     })();
