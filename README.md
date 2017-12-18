@@ -93,16 +93,21 @@ RUN.router({
     // 前置任务  
   },  
   routes: {  
-    'list': function () {  
-      console.log('list');  
-    },  
-    'default': function () {  
-      console.log('default');  
-    }  
+    'list': 'list',  
+    'edit': 'edit',  
+    'default': function () {  
+      console.log('default');  
+    }  
   },  
   after: function () {  
     // 后置任务  
-  }  
+  },  
+  list: function () { 
+    console.log('page list');  
+  },  
+  edit: function () {
+    console.log('page edit');
+  }
 });  
 ~~~
 #### 单条配置
