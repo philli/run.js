@@ -22,7 +22,7 @@
     var _hasOwn = _obj.hasOwnProperty;
     var _fn = function () {
     };
-    var _tmplLabel = {start: '<%', end: '%>'};
+    var _tmplLabel = {start: '{%', end: '%}'};
     var _extend = function () {
         var src, copyIsArray, copy, name, options, clone,
             self = arguments.callee,
@@ -445,7 +445,7 @@
     RUN.tmpl = (function () {
         var cache = {};
         return function tmpl(str, data) {
-            var fn = !/\W/.test(str) ? cache[str] || (cache[str] = arguments.callee(document.getElementById(str).innerHTML)) : new Function('o', "var p=[];with(o||{}){p.push('" + str.replace(/[\r\t\n]/g, " ").split(_tmplLabel.start).join("\t").replace(eval("/((^|" + _tmplLabel.end + ")[^\\t]*)'/g"), "$1\r").replace(eval("/\\t=(.*?)" + _tmplLabel.end + "/g"), "',$1,'").split("\t").join("');").split(_tmplLabel.end).join("p.push('").split("\r").join("\\'") + "');}return p.join('');");
+            var fn = !/\W/.test(str) ? cache[str] || (cache[str] = tmpl(document.getElementById(str).innerHTML)) : new Function('o', "var p=[];with(o||{}){p.push('" + str.replace(/[\r\t\n]/g, " ").split(_tmplLabel.start).join("\t").replace(eval("/((^|" + _tmplLabel.end + ")[^\\t]*)'/g"), "$1\r").replace(eval("/\\t=(.*?)" + _tmplLabel.end + "/g"), "',$1,'").split("\t").join("');").split(_tmplLabel.end).join("p.push('").split("\r").join("\\'") + "');}return p.join('');");
             return data ? fn(data) : fn;
         };
     })();
